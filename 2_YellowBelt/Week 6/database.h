@@ -11,6 +11,7 @@ public:
 	bool DeleteEvent(const Date& date, const std::string& event);
 	int  DeleteDate(const Date& date);	
 	void Print(std::ostream& os) const;
+	std::string Last(Date date) const;
 
 	template <typename _Pred>
 	int RemoveIf(_Pred predicate);
@@ -19,5 +20,5 @@ public:
 	std::vector<std::string> FindIf(_Pred date) const;
 
 private:
-	std::map < Date, std::set<std::string> > getEventByDate;
+	std::map < Date, std::vector<std::string> > getEventByDate;
 };

@@ -29,6 +29,7 @@ template <class It> shared_ptr<Node> ParseComparison(It& current, It end) {
     throw logic_error("Expected right value of comparison");
   }
 
+
   Comparison cmp;
   if (op.value == "<") {
     cmp = Comparison::Less;
@@ -57,6 +58,7 @@ template <class It> shared_ptr<Node> ParseComparison(It& current, It end) {
   }
 }
 
+//begin(), end(), 0
 template <class It>
 shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
   if (current == end) {
@@ -105,6 +107,7 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
 shared_ptr<Node> ParseCondition(istream& is) {
   auto tokens = Tokenize(is);
   auto current = tokens.begin();
+
   auto top_node = ParseExpression(current, tokens.end(), 0u);
 
   if (!top_node) {

@@ -8,7 +8,7 @@ void Database::Add(const Date& new_date, const std::string& new_event = "") {
 			}
 		}
 	}
-	getEventByDate[new_date].insert(new_event);
+	getEventByDate[new_date].push_back(new_event);
 }
 
 bool Database::DeleteEvent(const Date& date, const std::string& event) {
@@ -71,6 +71,22 @@ std::vector<std::string> Database::FindIf(_Pred predicate) const {
 			else {
 				vecEvents.push_back(*itFound);
 			}
+		}
+	}
+}
+
+
+std::string Database::Last(Date date) const {
+	bool isPrevWasLess = false;
+	std::string sRes = "No entries";
+	for (auto el : getEventByDate) {		
+	}
+	for (auto it = getEventByDate.rbegin; it != getEventByDate.rend(); ++it) {
+		if (it->first <= date) { 
+			isPrevWasLess = true; 
+			sRes = it->second;
+		}
+		else if (it->first > date && isPrevWasLess) {
 		}
 	}
 }
