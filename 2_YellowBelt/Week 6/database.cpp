@@ -1,6 +1,6 @@
 #include "database.h"
 
-void Database::Add(const Date& new_date, const std::string& new_event = "") {
+void Database::Add(const Date& new_date, const std::string& new_event) {
 	if (getEventByDate.count(new_date) > 0) {
 		for (auto ev : getEventByDate[new_date]) {
 			if (ev == new_event) {
@@ -8,7 +8,8 @@ void Database::Add(const Date& new_date, const std::string& new_event = "") {
 			}
 		}
 	}
-	getEventByDate[new_date].push_back(new_event);
+	getEventByDate[new_date].insert(new_event);
+	getVecEventsByDate[new_date].push_back(new_event);
 }
 
 bool Database::DeleteEvent(const Date& date, const std::string& event) {
@@ -16,7 +17,7 @@ bool Database::DeleteEvent(const Date& date, const std::string& event) {
 		auto it = std::begin(getEventByDate[date]);
 		for (auto ev : getEventByDate[date]) {
 			if (ev == event) {
-				getEventByDate[date].erase(it);
+				getEventByDate[date].erase(it);				
 				std::cout << "Deleted successfully" << std::endl;
 				return true;
 			}
@@ -48,31 +49,51 @@ void Database::Print(std::ostream& os) const {
 	}
 }
 
-template <typename _Pred>
-int Database::RemoveIf(_Pred predicate) {
-	auto itToRem = std::remove_if(getEventByDate.begin(), getEventByDate.end(), predicate);
-	int iCount = std::distance(itToRem, getEventByDate.end());
-	getEventByDate.erase(itToRem, getEventByDate.end());
+int Database::RemoveIf(std::function<bool(const Date& date, const std::string& event)> predicate) {
+	for (auto it = getEventByDate.begin(); it != getEventByDate.end(); ++it) {
+		std::vector<std::string> setStr;
+		return 0;
+		auto itToRem = std::remove_if(setStr.begin(), setStr.end(), [](const std::string& sEvent)
+		{
+			return true;
+		});
+		
+		
+		//auto itToRem = std::remove_if(setStr.begin(), setStr.end(), [it, predicate](const std::string sEvent)
+		//{
+		//	return predicate(it->first, sEvent);
+		//});
+
+
+
+		/*auto itToRem = std::remove_if(it->second.begin(), it->second.end(), [it, predicate] (std::string sEvent)
+		{
+			return predicate(it->first, sEvent);
+		});
+		int iCount = std::distance(itToRem, it->second.end());
+		if (itToRem != it->second.end()) {
+			it->second.erase(itToRem);
+		}	*/	
+	}
 }
 
-template <typename _Pred>
-std::vector<std::string> Database::FindIf(_Pred predicate) const {
+std::vector<std::string> Database::FindIf(std::function<bool(const Date& date, const std::string& event)> predicate) const {
 	std::vector<std::string> vecEvents;
-	
-	//All sets in getEventByDate
-	for (auto it = getEventByDate.begin(); it != getEventByDate.end(); ++it) {
-		//Find events in each set
-		auto itFound = (*it).second.begin();
-		while (true) {
-			itFound = std::find_if(itFound, (*it).second.end(), predicate);
-			if (itFound == (*it).second.end()) {
-				break;
-			}
-			else {
-				vecEvents.push_back(*itFound);
-			}
-		}
-	}
+	return vecEvents;
+	////All sets in getEventByDate
+	//for (auto it = getEventByDate.begin(); it != getEventByDate.end(); ++it) {
+	//	//Find events in each set
+	//	auto itFound = (*it).second.begin();
+	//	while (true) {
+	//		itFound = std::find_if(itFound, (*it).second.end(), predicate);
+	//		if (itFound == (*it).second.end()) {
+	//			break;
+	//		}
+	//		else {
+	//			vecEvents.push_back(*itFound);
+	//		}
+	//	}
+	//}
 }
 
 
@@ -81,12 +102,14 @@ std::string Database::Last(Date date) const {
 	std::string sRes = "No entries";
 	for (auto el : getEventByDate) {		
 	}
-	for (auto it = getEventByDate.rbegin; it != getEventByDate.rend(); ++it) {
+	for (auto it = getVecEventsByDate.rbegin(); it != getVecEventsByDate.rend(); ++it) {
 		if (it->first <= date) { 
 			isPrevWasLess = true; 
-			sRes = it->second;
+			sRes = it->second.back();
 		}
 		else if (it->first > date && isPrevWasLess) {
+			break;
 		}
 	}
+	return sRes;
 }

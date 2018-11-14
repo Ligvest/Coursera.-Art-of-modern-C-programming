@@ -54,6 +54,22 @@ bool operator<(const Date& lhs, const Date& rhs) {
 	}
 }
 
+bool operator==(const Date& lhs, const Date& rhs) {
+	if (lhs.GetYear() == rhs.GetYear() && lhs.GetMonth() == rhs.GetMonth() && lhs.GetDay() == rhs.GetDay()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool operator<=(const Date& lhs, const Date& rhs) {
+	return (lhs < rhs || lhs == rhs);
+}
+bool operator>(const Date& lhs, const Date& rhs) {
+	return !(lhs <= rhs);
+}
+
 std::ostream& operator << (std::ostream& stream, const Date& date) {
 	stream << std::setfill('0') << std::setw(4) << date.GetYear()
 		<< '-'

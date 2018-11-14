@@ -3,9 +3,25 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 #include <set>
 
 using namespace std;
+
+template <class T>
+ostream& operator << (ostream& os, const std::vector<T>& s) {
+	os << "[";
+	bool first = true;
+	for (const auto& x : s) {
+		if (!first) {
+			os << ", ";
+		}
+		first = false;
+		os << x;
+	}
+	return os << "]";
+}
+
 
 template <class T>
 ostream& operator << (ostream& os, const set<T>& s) {

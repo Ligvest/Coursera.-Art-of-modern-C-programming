@@ -104,8 +104,11 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
   return left;
 }
 
+//date == 2017-07-08
 shared_ptr<Node> ParseCondition(istream& is) {
   auto tokens = Tokenize(is);
+
+  //({"date", TokenType::COLUMN}, {"==", TokenType::COMPARE_OP}, {date, TokenType::DATE})
   auto current = tokens.begin();
 
   auto top_node = ParseExpression(current, tokens.end(), 0u);

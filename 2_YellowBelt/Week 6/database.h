@@ -4,6 +4,7 @@
 #include <set>
 #include <algorithm>
 #include <vector>
+#include <functional>
 
 class Database {
 public:
@@ -12,13 +13,11 @@ public:
 	int  DeleteDate(const Date& date);	
 	void Print(std::ostream& os) const;
 	std::string Last(Date date) const;
-
-	template <typename _Pred>
-	int RemoveIf(_Pred predicate);
-
-	template <typename _Pred>
-	std::vector<std::string> FindIf(_Pred date) const;
+	
+	int RemoveIf(std::function<bool(const Date& date, const std::string& event)> predicate);
+	std::vector<std::string> FindIf(std::function<bool(const Date& date, const std::string& event)> predicate) const;
 
 private:
-	std::map < Date, std::vector<std::string> > getEventByDate;
+	std::map < Date, std::set<std::string> > getEventByDate;
+	std::map < Date, std::vector<std::string> > getVecEventsByDate;
 };
