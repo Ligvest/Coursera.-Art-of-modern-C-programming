@@ -34,9 +34,10 @@ int main() {
     } else if (command == "Print") {
       db.Print(std::cout);
     } else if (command == "Del") {
+	//DateComparisonNode(Data date, LogicalOp cmp)  || EventComparisonNode
       auto condition = ParseCondition(is);
       auto predicate = [condition](const Date& date, const string& event) {
-        return condition->Evaluate(date, event);
+        return condition->Evaluate(date, event); // bool 
       };	  
       int count = db.RemoveIf(predicate);
       cout << "Removed " << count << " entries" << endl;

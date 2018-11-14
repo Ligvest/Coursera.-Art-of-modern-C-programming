@@ -58,7 +58,7 @@ template <class It> shared_ptr<Node> ParseComparison(It& current, It end) {
   }
 }
 
-//begin(), end(), 0
+//({"date", TokenType::COLUMN}, {"==", TokenType::COMPARE_OP}, {date, TokenType::DATE})
 template <class It>
 shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
   if (current == end) {
@@ -79,7 +79,8 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
   }
 
   const map<LogicalOperation, unsigned> precedences = {
-      {LogicalOperation::Or, 1}, {LogicalOperation::And, 2}
+      {LogicalOperation::Or, 1}, 
+	  {LogicalOperation::And, 2}
   };
 
   while (current != end && current->type != TokenType::PAREN_RIGHT) {
@@ -111,6 +112,7 @@ shared_ptr<Node> ParseCondition(istream& is) {
   //({"date", TokenType::COLUMN}, {"==", TokenType::COMPARE_OP}, {date, TokenType::DATE})
   auto current = tokens.begin();
 
+  //{DateComparisonNode (2017, 07, 08; cmp = Equal)}
   auto top_node = ParseExpression(current, tokens.end(), 0u);
 
   if (!top_node) {

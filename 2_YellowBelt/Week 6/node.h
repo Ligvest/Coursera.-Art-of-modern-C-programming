@@ -18,21 +18,22 @@ enum class Comparison {
 	NotEqual
 };
 
+bool compareDate(Comparison cmp, Date left, Date right);
+
 class Node {
 public:
-	virtual bool Evaluate(Date date, std::string sEvent) = 0;	
-	bool compare(Date date) {}
+	virtual bool Evaluate(Date date, std::string sEvent) = 0;		
 };
 
 class EmptyNode : public Node {
 public:
-	bool Evaluate(Date date, std::string sEvent) override { return true; }
+	bool Evaluate(Date date, std::string sEvent) override;
 };
 
 class DateComparisonNode : public Node {
 public:
-	DateComparisonNode(Comparison cmp, Date date) : _cmp(cmp), _date(date) {}
-	bool Evaluate(Date date, std::string sEvent) override { return true; }
+	DateComparisonNode(Comparison cmp, Date date);
+	bool Evaluate(Date date, std::string sEvent) override;
 
 private:
 	Date _date;
@@ -41,8 +42,8 @@ private:
 
 class EventComparisonNode : public Node {
 public:
-	EventComparisonNode(Comparison cmp, std::string sValue) : _cmp(cmp), _sValue(sValue) {}
-	bool Evaluate(Date date, std::string sEvent) override { return true; }
+	EventComparisonNode(Comparison cmp, std::string sValue);
+	bool Evaluate(Date date, std::string sEvent) override;
 
 private:
 	std::string _sValue;
@@ -51,9 +52,8 @@ private:
 
 class LogicalOperationNode : public Node {
 public:
-	LogicalOperationNode(LogicalOperation logical_op, std::shared_ptr<Node> left, std::shared_ptr<Node> right) :
-		_logical_op(logical_op), _left(left), _right(right) {}
-	bool Evaluate(Date date, std::string sEvent) override { return true; }
+	LogicalOperationNode(LogicalOperation logical_op, std::shared_ptr<Node> left, std::shared_ptr<Node> right);
+	bool Evaluate(Date date, std::string sEvent) override;
 private:
 	LogicalOperation _logical_op;
 	std::shared_ptr<Node> _left;
