@@ -109,6 +109,7 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
 shared_ptr<Node> ParseCondition(istream& is) {
   auto tokens = Tokenize(is);
 
+  //({"event", TokenType::COLUMN}, {"==", TokenType::COMPARE_OP}, {"Holiday", TokenType::EVENT})
   //({"date", TokenType::COLUMN}, {"==", TokenType::COMPARE_OP}, {date, TokenType::DATE})
   auto current = tokens.begin();
 

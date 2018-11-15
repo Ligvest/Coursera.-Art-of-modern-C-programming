@@ -50,66 +50,55 @@ void Database::Print(std::ostream& os) const {
 }
 
 int Database::RemoveIf(std::function<bool(const Date& date, const std::string& event)> predicate) {
-	for (auto it = getEventByDate.begin(); it != getEventByDate.end(); ++it) {
-		std::vector<std::string> setStr;
-		return 0;
-		auto itToRem = std::remove_if(setStr.begin(), setStr.end(), [](const std::string& sEvent)
-		{
-			return true;
-		});
-		
-		
-		//auto itToRem = std::remove_if(setStr.begin(), setStr.end(), [it, predicate](const std::string sEvent)
-		//{
-		//	return predicate(it->first, sEvent);
-		//});
-
-
-
-		/*auto itToRem = std::remove_if(it->second.begin(), it->second.end(), [it, predicate] (std::string sEvent)
+	int iCount = 0;
+	for (auto it = getVecEventsByDate.begin(); it != getVecEventsByDate.end(); ++it) {
+				
+		auto itToRem = std::remove_if(it->second.begin(), it->second.end(), [&it, &predicate] (std::string sEvent)
 		{
 			return predicate(it->first, sEvent);
 		});
-		int iCount = std::distance(itToRem, it->second.end());
+		iCount += std::distance(itToRem, it->second.end());
 		if (itToRem != it->second.end()) {
-			it->second.erase(itToRem);
-		}	*/	
+			for (auto iter = itToRem; iter != it->second.end(); ++iter) {
+				getEventByDate[it->first].erase(*iter);
+			}
+			it->second.erase(itToRem, it->second.end());
+		}
 	}
+	return iCount;
 }
 
 std::vector<std::string> Database::FindIf(std::function<bool(const Date& date, const std::string& event)> predicate) const {
-	std::vector<std::string> vecEvents;
-	return vecEvents;
-	////All sets in getEventByDate
-	//for (auto it = getEventByDate.begin(); it != getEventByDate.end(); ++it) {
-	//	//Find events in each set
-	//	auto itFound = (*it).second.begin();
-	//	while (true) {
-	//		itFound = std::find_if(itFound, (*it).second.end(), predicate);
-	//		if (itFound == (*it).second.end()) {
-	//			break;
-	//		}
-	//		else {
-	//			vecEvents.push_back(*itFound);
-	//		}
-	//	}
-	//}
+	std::vector<std::string> vecEvents;	
+	
+	for (auto it = getVecEventsByDate.begin(); it != getVecEventsByDate.end(); ++it) {
+		auto itToRem = it->second.begin();
+		while (itToRem != it->second.end()) {
+			itToRem = std::find_if(itToRem, it->second.end(), [&it, &predicate](std::string sEvent)
+			{
+				return predicate(it->first, sEvent);
+			});
+
+			if (itToRem != it->second.end()) {
+				std::ostringstream oss;
+				oss << it->first << " " << *itToRem;
+				vecEvents.push_back(oss.str());
+				++itToRem;
+			}
+		}		
+	}
+
+	return vecEvents;	
 }
 
 
-std::string Database::Last(Date date) const {
-	bool isPrevWasLess = false;
-	std::string sRes = "No entries";
-	for (auto el : getEventByDate) {		
-	}
+std::string Database::Last(Date date) const {		
 	for (auto it = getVecEventsByDate.rbegin(); it != getVecEventsByDate.rend(); ++it) {
-		if (it->first <= date) { 
-			isPrevWasLess = true; 
-			sRes = it->second.back();
-		}
-		else if (it->first > date && isPrevWasLess) {
-			break;
-		}
+		if (it->first <= date) { 	
+			std::ostringstream oss;
+			oss << it->first << " " << it->second.back();			
+			return oss.str();
+		}		
 	}
-	return sRes;
+	return "No entries";
 }

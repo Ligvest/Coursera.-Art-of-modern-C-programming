@@ -9,7 +9,8 @@
 
 using namespace std;
 
-string ParseEvent(istream& is) {  
+string ParseEvent(istream& is) { 
+	is.ignore(1);
 	std::string sEvent;
 	std::getline(is, sEvent);
 	return sEvent;

@@ -19,6 +19,8 @@ enum class Comparison {
 };
 
 bool compareDate(Comparison cmp, Date left, Date right);
+bool compareEvent(Comparison cmp, std::string left, std::string right);
+
 
 class Node {
 public:
@@ -42,11 +44,11 @@ private:
 
 class EventComparisonNode : public Node {
 public:
-	EventComparisonNode(Comparison cmp, std::string sValue);
+	EventComparisonNode(Comparison cmp, std::string sEvent);
 	bool Evaluate(Date date, std::string sEvent) override;
 
 private:
-	std::string _sValue;
+	std::string _sEvent;
 	Comparison _cmp;
 };
 

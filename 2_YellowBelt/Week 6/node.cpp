@@ -9,7 +9,17 @@ bool compareDate(Comparison cmp, Date left, Date right) {
 	else if (cmp == Comparison::GreaterOrEqual) { return left >= right; }
 	else if (cmp == Comparison::Equal) { return left == right; }
 	else if (cmp == Comparison::NotEqual) { return left != right; }
-	else { throw std::invalid_argument("Unknown compare operation"); }
+	else { throw std::invalid_argument("Unknown compare operation in CompareDate"); }
+}
+
+bool compareEvent(Comparison cmp, std::string left, std::string right) {
+	if (cmp == Comparison::Less) { return left < right; }
+	else if (cmp == Comparison::LessOrEqual) { return left <= right; }
+	else if (cmp == Comparison::Greater) { return left > right; }
+	else if (cmp == Comparison::GreaterOrEqual) { return left >= right; }
+	else if (cmp == Comparison::Equal) { return left == right; }
+	else if (cmp == Comparison::NotEqual) { return left != right; }
+	else { throw std::invalid_argument("Unknown compare operation in CompareEvent"); }
 }
 
 //EmptyNode
@@ -17,11 +27,11 @@ bool EmptyNode::Evaluate(Date date, std::string sEvent) { return true; }
 
 //DateComparisonNode
 DateComparisonNode::DateComparisonNode(Comparison cmp, Date date) : _cmp(cmp), _date(date) {}
-bool DateComparisonNode::Evaluate(Date date, std::string sEvent) { return compareDate(_cmp, _date, date); }
+bool DateComparisonNode::Evaluate(Date date, std::string sEvent) { return compareDate(_cmp, date, _date); }
 
 //EventComparisonNode
-EventComparisonNode::EventComparisonNode(Comparison cmp, std::string sValue) : _cmp(cmp), _sValue(sValue) {}
-bool EventComparisonNode::Evaluate(Date date, std::string sEvent) { return true; }
+EventComparisonNode::EventComparisonNode(Comparison cmp, std::string sEvent) : _cmp(cmp), _sEvent(sEvent) {}
+bool EventComparisonNode::Evaluate(Date date, std::string sEvent) { return compareEvent(_cmp, sEvent, _sEvent); }
 
 //LogicalOperationNode
 LogicalOperationNode::LogicalOperationNode(LogicalOperation logical_op, std::shared_ptr<Node> left, std::shared_ptr<Node> right) :
