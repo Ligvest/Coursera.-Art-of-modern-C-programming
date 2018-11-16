@@ -3,6 +3,7 @@
 #include "condition_parser.h"
 #include "node.h"
 #include "test_runner.h"
+#include <cctype>
 
 #include <iostream>
 #include <stdexcept>
@@ -10,7 +11,9 @@
 using namespace std;
 
 string ParseEvent(istream& is) { 
-	is.ignore(1);
+	while (std::isspace(is.peek())) {
+		is.ignore(1);
+	}
 	std::string sEvent;
 	std::getline(is, sEvent);
 	return sEvent;
@@ -19,7 +22,7 @@ string ParseEvent(istream& is) {
 void TestAll();
 
 int main() {
-  //TestAll();
+  TestAll();
 
   Database db;
 
@@ -69,6 +72,33 @@ int main() {
   return 0;
 }
 
+
+void TestDateComparison() {
+	{
+		Assert(Date{ 2017, 11, 18 } == Date{ 2017, 11, 18 }, "Compare date 1");
+		Assert(Date{ 2017, 11, 18 } != Date{ 2017, 11, 19 }, "Compare date 2");
+
+		Assert(Date{ 2017, 11, 18 } < Date{ 2017, 11, 19 }, "Compare date 3");
+		Assert(Date{ 2017, 10, 18 } < Date{ 2017, 11, 19 }, "Compare date 4");
+		Assert(Date{ 2016, 11, 18 } < Date{ 2017, 11, 19 }, "Compare date 5");
+		Assert(Date{ 2017, 11, 20 } > Date{ 2017, 11, 19 }, "Compare date 6");
+		Assert(Date{ 2017, 12, 18 } > Date{ 2017, 11, 19 }, "Compare date 7");
+		Assert(Date{ 2018, 11, 18 } > Date{ 2017, 11, 19 }, "Compare date 8");
+
+		Assert(Date{ 2017, 11, 18 } >= Date{ 2017, 11, 18 }, "Compare date 9");
+		Assert(Date{ 2017, 11, 18 } <= Date{ 2017, 11, 18 }, "Compare date 10");
+
+		Assert(Date{ 2017, 11, 18 } <= Date{ 2017, 11, 19 }, "Compare date 11");
+		Assert(Date{ 2017, 10, 18 } <= Date{ 2017, 11, 19 }, "Compare date 12");
+		Assert(Date{ 2016, 11, 18 } <= Date{ 2017, 11, 19 }, "Compare date 13");
+		Assert(Date{ 2017, 11, 20 } >= Date{ 2017, 11, 19 }, "Compare date 14");
+		Assert(Date{ 2017, 12, 18 } >= Date{ 2017, 11, 19 }, "Compare date 15");
+		Assert(Date{ 2018, 11, 18 } >= Date{ 2017, 11, 19 }, "Compare date 16");
+	}
+}
+
+
+
 void TestParseEvent() {
   {
     istringstream is("event");
@@ -88,7 +118,8 @@ void TestParseEvent() {
 }
 
 void TestAll() {
-  TestRunner tr;
+  TestRunner tr;  
+  tr.RunTest(TestDateComparison, "TestDateComparison");
   tr.RunTest(TestParseEvent, "TestParseEvent");
   tr.RunTest(TestParseCondition, "TestParseCondition");
 }

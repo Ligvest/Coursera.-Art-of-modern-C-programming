@@ -88,7 +88,7 @@ std::ostream& operator << (std::ostream& stream, const Date& date) {
 	return stream;
 }
 
-Date ParseDate(std::istringstream& is) {
+Date ParseDate(std::istream& is) {
 	Date date;
 	date.ReadFromStream(is);
 	return date;
