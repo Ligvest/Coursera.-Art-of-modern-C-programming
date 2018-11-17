@@ -16,6 +16,6 @@ public:
 	std::vector<std::string> FindIf(std::function<bool(const Date& date, const std::string& event)> predicate) const;
 
 private:
-	std::map < Date, std::set<std::string> > getEventByDate;
+	std::map < Date, std::set<std::string> > getSetEventsByDate;
 	std::map < Date, std::vector<std::string> > getVecEventsByDate;
 };
